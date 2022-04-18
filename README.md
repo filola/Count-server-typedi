@@ -6,6 +6,6 @@ Setting
  - ESlint
  - prettier
 
-Run server commend
+Run server command
 -----------
 - npm run dev
