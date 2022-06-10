@@ -1,0 +1,37 @@
+{
+  "config": {
+    "target": "http://localhost:3000",
+    "phases": [
+      {
+        "duration": 71,
+        "arrivalRate": 14
+      }
+    ],
+    "defaults": {
+      "headers": {
+        "User-Agent": "Artillery"
+      }
+    },
+    "payload": {
+      "path": "./abc.csv",
+      "fields": [
+        "userId"
+      ]
+    }
+  },
+  "scenarios": [
+    {
+      "name": "Joining user",
+      "flow": [
+        {
+          "post": {
+            "url": "/check2",
+            "json": {
+              "userId": "{{userId}}"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -4,6 +4,7 @@
     "@types/node": "^17.0.21",
     "@typescript-eslint/eslint-plugin": "^5.13.0",
     "@typescript-eslint/parser": "^5.13.0",
+    "artillery": "^2.0.0-18",
     "eslint": "^8.10.0",
     "eslint-config-prettier": "^8.4.0",
     "eslint-plugin-prettier": "^4.0.0",
@@ -20,7 +21,21 @@
   },
   "scripts": {
     "start": "node dist/app.js",
-    "build" : "tsc -p .",
-    "dev" : "nodemon --watch \"src/**/*.ts\" --exec \"ts-node\" src/app.ts"
-  }
+    "build": "tsc -p .",
+    "dev": "nodemon --watch \"src/**/*.ts\" --exec \"ts-node\" src/app.ts"
+  },
+  "name": "x22002_nissan_ariya_be",
+  "description": "Setting ----------  - Typescript  - default Port - 3000  - ESlint  - prettier",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/quanutum-universe/X22002_NISSAN_ARIYA_BE.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/quanutum-universe/X22002_NISSAN_ARIYA_BE/issues"
+  },
+  "homepage": "https://github.com/quanutum-universe/X22002_NISSAN_ARIYA_BE#readme"
 }
