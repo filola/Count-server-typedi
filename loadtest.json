@@ -3,8 +3,8 @@
     "target": "http://localhost:3000",
     "phases": [
       {
-        "duration": 71,
-        "arrivalRate": 14
+        "duration": 10,
+        "arrivalRate": 22
       }
     ],
     "defaults": {
@@ -13,10 +13,8 @@
       }
     },
     "payload": {
-      "path": "./abc.csv",
-      "fields": [
-        "userId"
-      ]
+      "path": "./post900.csv",
+      "fields": ["userId"]
     }
   },
   "scenarios": [
@@ -25,10 +23,21 @@
       "flow": [
         {
           "post": {
-            "url": "/check2",
+            "url": "/"
+          }
+        },
+        {
+          "post": {
+            "url": "/EnterCheck",
             "json": {
               "userId": "{{userId}}"
-            }
+            },
+            "count": 10
+          }
+        },
+        {
+          "post": {
+            "url": "/disconnect"
           }
         }
       ]

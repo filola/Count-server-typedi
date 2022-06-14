@@ -17,7 +17,8 @@
     "typescript": "^4.6.2"
   },
   "dependencies": {
-    "dotenv": "^16.0.0"
+    "dotenv": "^16.0.0",
+    "nanoid": "^3.3.4"
   },
   "scripts": {
     "start": "node dist/app.js",
@@ -27,7 +28,7 @@
   "name": "x22002_nissan_ariya_be",
   "description": "Setting ----------  - Typescript  - default Port - 3000  - ESlint  - prettier",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "app.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/quanutum-universe/X22002_NISSAN_ARIYA_BE.git"
