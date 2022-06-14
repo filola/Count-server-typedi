@@ -3,7 +3,7 @@
     "target": "http://localhost:3000",
     "phases": [
       {
-        "duration": 10,
+        "duration": 1000,
         "arrivalRate": 22
       }
     ],
@@ -32,7 +32,7 @@
             "json": {
               "userId": "{{userId}}"
             },
-            "count": 10
+            "count": 100
           }
         },
         {
