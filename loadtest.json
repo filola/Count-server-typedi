@@ -4,7 +4,7 @@
     "phases": [
       {
         "duration": 10,
-        "arrivalRate": 22
+        "arrivalRate": 1
       }
     ],
     "defaults": {
@@ -13,8 +13,10 @@
       }
     },
     "payload": {
-      "path": "./post900.csv",
-      "fields": ["userId"]
+      "path": "./abc.csv",
+      "fields": [
+        "userId"
+      ]
     }
   },
   "scenarios": [
@@ -22,22 +24,14 @@
       "name": "Joining user",
       "flow": [
         {
-          "post": {
-            "url": "/"
-          }
-        },
-        {
-          "post": {
-            "url": "/EnterCheck",
-            "json": {
-              "userId": "{{userId}}"
+          "loop": {
+            "post": {
+              "url": "/EnterCheck",
+              "json": {
+                "userId": "{{userId}}"
+              }
             },
-            "count": 10
-          }
-        },
-        {
-          "post": {
-            "url": "/disconnect"
+            "think": 10
           }
         }
       ]
