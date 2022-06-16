@@ -8,8 +8,8 @@ app.use(express.json());
 let num = 0;
 const maxUsers = 10;
 // const waitingUsers: any[] = [995, 996, 997, 998, 999, 1000, 1001, 1002, 1003, 1004, 1005, 1006];
-// const waitingUsers: Array<string> = [];
-const waitingUsers: Array<number> = [];
+const waitingUsers: Array<string> = [];
+// const waitingUsers: Array<number> = [];
 let enteredUsers = 0;
 let count = 0;
 
@@ -81,7 +81,7 @@ app.post('/disconnect', (req: Request, res: Response) => {
 });
 
 // Enter room from waiting room
-app.post('/EnterCheck', (req: Request, res: Response, next: NextFunction) => {
+app.post('/EnteCheck', (req: Request, res: Response, next: NextFunction) => {
   // const userId = req.body.userId;
   const userId = req.body.userId;
 
@@ -110,8 +110,8 @@ app.post('/EnterCheck', (req: Request, res: Response, next: NextFunction) => {
 // First Connect
 app.post('/', (req: Request, res: Response, next: NextFunction) => {
   // const { userId } = req.body;
-  // const uid: string = nanoid(20);
-  const uid: number = ++num;
+  const uid: string = nanoid(20);
+  // const uid: number = ++num;
 
   if (count <= maxUsers - 1 && waitingUsers.length == 0) {
     count++;
