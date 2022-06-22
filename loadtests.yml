@@ -1,0 +1,19 @@
+config:
+  target: http://localhost:3000
+  tls:
+  rejectUnauthorized: false
+  phases:
+    - duration: 300
+      arrivalRate: 10
+scenarios:
+  - name: "파일을 생서 후, 삭제한다."
+    flow:
+      - get:
+          url: "/connect"
+          capture:
+            json: "$.userId"
+            as: "userId"
+      - loop:
+          - get:
+              url: "/EnterCheck/{{ userId }}"
+          - think: 10

@@ -3,7 +3,7 @@
     "target": "http://localhost:3000",
     "phases": [
       {
-        "duration": 10,
+        "duration": 20,
         "arrivalRate": 1
       }
     ],
@@ -11,12 +11,6 @@
       "headers": {
         "User-Agent": "Artillery"
       }
-    },
-    "payload": {
-      "path": "./abc.csv",
-      "fields": [
-        "userId"
-      ]
     }
   },
   "scenarios": [
@@ -24,14 +18,20 @@
       "name": "Joining user",
       "flow": [
         {
-          "loop": {
-            "post": {
-              "url": "/EnterCheck",
-              "json": {
-                "userId": "{{userId}}"
-              }
-            },
-            "think": 10
+          "get": {
+            "url": "/connect",
+            "capture": {
+              "json": "$.data",
+              "as": "data"
+            }
+          }
+        },
+        {
+          "post": {
+            "url": "/EnterCheck",
+            "json": {
+              "userId": "{{data.userId}}"
+            }
           }
         }
       ]

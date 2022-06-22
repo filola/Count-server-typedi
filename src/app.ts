@@ -1,20 +1,19 @@
-import express, { Request, Response, NextFunction } from 'express';
-import { nanoid } from 'nanoid';
-import 'dotenv/config';
+import express, { Request, Response, NextFunction } from "express";
+import { nanoid } from "nanoid";
+import "dotenv/config";
 
 const app = express();
 app.use(express.json());
 
-let num = 0;
-const maxUsers = 10;
+const maxUsers = 1000;
 // const waitingUsers: any[] = [995, 996, 997, 998, 999, 1000, 1001, 1002, 1003, 1004, 1005, 1006];
-const waitingUsers: Array<string> = [];
-// const waitingUsers: Array<number> = [];
+// const waitingUsers: Array<string> = [];
+const waitingUsers: Array<number> = [];
 let enteredUsers = 0;
-let count = 0;
+let count = 1000;
 
-app.get('/', (req: Request, res: Response, next: NextFunction) => {
-  res.send('hello world');
+app.get("/", (req: Request, res: Response, next: NextFunction) => {
+  res.send("hello world");
 });
 
 // app.post('/userCountCheck', (req: Request, res: Response, next: NextFunction) => {
@@ -53,7 +52,8 @@ app.get('/', (req: Request, res: Response, next: NextFunction) => {
 // });
 
 // waiting disconnect
-app.post('/WaitingDisconnect', (req: Request, res: Response) => {
+
+app.post("/WaitingDisconnect", (req: Request, res: Response) => {
   const userId = req.body.userId;
   waitingUsers.splice(waitingUsers.indexOf(userId), 1);
 
@@ -61,7 +61,7 @@ app.post('/WaitingDisconnect', (req: Request, res: Response) => {
 });
 
 // disconnect
-app.post('/disconnect', (req: Request, res: Response) => {
+app.post("/disconnect", (req: Request, res: Response) => {
   if (count !== 0) {
     count--;
 
@@ -70,10 +70,10 @@ app.post('/disconnect', (req: Request, res: Response) => {
       enteredUsers++;
     }
 
-    console.log('==================');
+    console.log("==================");
     console.log(count);
     console.log(enteredUsers);
-    console.log('==================');
+    console.log("==================");
 
     return res.status(200).json({ enteredUsers });
   }
@@ -81,54 +81,51 @@ app.post('/disconnect', (req: Request, res: Response) => {
 });
 
 // Enter room from waiting room
-app.post('/EnteCheck', (req: Request, res: Response, next: NextFunction) => {
+app.get("/EnterCheck/:userId", (req: Request, res: Response, next: NextFunction) => {
   // const userId = req.body.userId;
-  const userId = req.body.userId;
+  const { userId } = req.params;
+  const userIdN = Number(userId);
 
-  const index = waitingUsers.indexOf(userId);
+  const index = waitingUsers.indexOf(userIdN);
   const enterCount = enteredUsers;
 
   let enter = false;
 
-  console.log(userId);
-  console.log(index);
-
   if (enterCount > 0 && index <= enterCount - 1 && index !== -1 && count < maxUsers) {
     count++;
     enteredUsers--;
-    waitingUsers.splice(waitingUsers.indexOf(userId), 1);
+    waitingUsers.splice(waitingUsers.indexOf(userIdN), 1);
     enter = true;
+    console.log("entercount", count);
   }
 
-  console.log('enteredUsers', enteredUsers);
-  console.log('waitingUsers', waitingUsers);
-  console.log(enter);
+  // console.log("enteredUsers", enteredUsers, "enter", enter);
 
   return res.status(200).json({ enter });
 });
 
+let num = 0;
 // First Connect
-app.post('/', (req: Request, res: Response, next: NextFunction) => {
+app.get("/connect", (req: Request, res: Response, next: NextFunction) => {
   // const { userId } = req.body;
-  const uid: string = nanoid(20);
-  // const uid: number = ++num;
+  // const userId: string = nanoid(20);
+  const userId: number = ++num;
 
   if (count <= maxUsers - 1 && waitingUsers.length == 0) {
     count++;
     const enter = true;
-    console.log(count);
+
     return res.status(200).json({ enter });
   }
 
   if (count >= maxUsers || waitingUsers.length > 0) {
     // waitingUsers.push(userId);
-    waitingUsers.push(uid);
-    console.log('wait', waitingUsers);
-
+    waitingUsers.push(userId);
+    console.log(waitingUsers);
     const enter = false;
     const totalUser = count + waitingUsers.length;
-
-    return res.status(200).json({ enter, totalUser, uid });
+    console.log(totalUser);
+    return res.status(200).json({ userId });
   }
 });
 
