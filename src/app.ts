@@ -1,9 +1,19 @@
 import express, { Request, Response, NextFunction } from "express";
 import { nanoid } from "nanoid";
 import "dotenv/config";
+import cors from "cors";
+
+import { dbConnectionCheck } from "./models";
+
+const corsOptions = {
+  origin: "*",
+};
 
 const app = express();
+app.use(cors(corsOptions));
 app.use(express.json());
+
+dbConnectionCheck();
 
 const maxUsers = 1000;
 // const waitingUsers: any[] = [995, 996, 997, 998, 999, 1000, 1001, 1002, 1003, 1004, 1005, 1006];
@@ -53,9 +63,11 @@ app.get("/", (req: Request, res: Response, next: NextFunction) => {
 
 // waiting disconnect
 
-app.post("/WaitingDisconnect", (req: Request, res: Response) => {
-  const userId = req.body.userId;
-  waitingUsers.splice(waitingUsers.indexOf(userId), 1);
+app.get("/WaitingDisconnect/:userId", (req: Request, res: Response) => {
+  // const userId = req.body.userId;
+  const { userId } = req.params;
+  const userIdN = Number(userId);
+  waitingUsers.splice(waitingUsers.indexOf(userIdN), 1);
 
   return res.sendStatus(200);
 });
@@ -129,6 +141,8 @@ app.get("/connect", (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-app.listen(process.env.PORT, () => {
-  console.log(`server listening on port ${process.env.PORT} `);
+const port = Number(process.env.PORT);
+
+app.listen(port, () => {
+  console.log(`server listening on port ${port} `);
 });

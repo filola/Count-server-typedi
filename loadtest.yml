@@ -1,0 +1,19 @@
+config:
+  target: http://localhost:3000
+  tls:
+  rejectUnauthorized: false
+  phases:
+    - duration: 300
+      arrivalRate: 10
+scenarios:
+  - name: "접속 후 대기열에 들어가 10초마다 핑을 보냄"
+    flow:
+      - get:
+          url: "/connect"
+          capture:
+            json: "$.userId"
+            as: "userId"
+      - loop:
+          - get:
+              url: "/EnterCheck/{{ userId }}"
+          - think: 10

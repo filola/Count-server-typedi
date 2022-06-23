@@ -3,17 +3,15 @@ config:
   tls:
   rejectUnauthorized: false
   phases:
-    - duration: 300
-      arrivalRate: 10
+    - duration: 150
+      arrivalRate: 8
 scenarios:
-  - name: "파일을 생서 후, 삭제한다."
+  - name: "접속 후 대기열에서 바로 나감"
     flow:
       - get:
           url: "/connect"
           capture:
             json: "$.userId"
             as: "userId"
-      - loop:
-          - get:
-              url: "/EnterCheck/{{ userId }}"
-          - think: 10
+      - get:
+          url: "/WaitingDisconnect/{{ userId }}"
