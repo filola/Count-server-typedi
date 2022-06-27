@@ -1,0 +1,17 @@
+config:
+  target: http://localhost:3000
+  tls:
+  rejectUnauthorized: false
+  phases:
+    - duration: 150
+      arrivalRate: 8
+scenarios:
+  - name: "접속 후 대기열에서 바로 나감"
+    flow:
+      - get:
+          url: "/connect"
+          capture:
+            json: "$.userId"
+            as: "userId"
+      - get:
+          url: "/WaitingDisconnect/{{ userId }}"

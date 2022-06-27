@@ -1,0 +1,40 @@
+{
+  "config": {
+    "target": "http://localhost:3000",
+    "phases": [
+      {
+        "duration": 20,
+        "arrivalRate": 1
+      }
+    ],
+    "defaults": {
+      "headers": {
+        "User-Agent": "Artillery"
+      }
+    }
+  },
+  "scenarios": [
+    {
+      "name": "Joining user",
+      "flow": [
+        {
+          "get": {
+            "url": "/connect",
+            "capture": {
+              "json": "$.data",
+              "as": "data"
+            }
+          }
+        },
+        {
+          "post": {
+            "url": "/EnterCheck",
+            "json": {
+              "userId": "{{data.userId}}"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

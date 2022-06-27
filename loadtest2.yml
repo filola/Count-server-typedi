@@ -1,0 +1,12 @@
+config:
+  target: http://localhost:3000
+  tls:
+  rejectUnauthorized: false
+  phases:
+    - duration: 200
+      arrivalRate: 10
+scenarios:
+  - name: "이미 접속된 사람이(대기열에 없는 사람) 종료"
+    flow:
+      - post:
+          url: "/disconnect"
