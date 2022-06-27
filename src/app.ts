@@ -17,7 +17,7 @@ const maxUsers = Number(process.env.MAX_USER);
 // const waitingUsers: Array<string> = [];
 const waitingUsers: Array<number> = [];
 let enteredUsers = 0;
-let count = 0;
+let count = 1000;
 
 app.get("/", (req: Request, res: Response, next: NextFunction) => {
   res.send("hello world");
@@ -42,10 +42,10 @@ app.post("/disconnect", (req: Request, res: Response) => {
       enteredUsers++;
     }
 
-    // console.log("==================");
-    // console.log(count);
-    // console.log(enteredUsers);
-    // console.log("==================");
+    console.log("==================");
+    console.log(count);
+    console.log(enteredUsers);
+    console.log("==================");
 
     return res.status(200).json({ enteredUsers });
   }
@@ -68,10 +68,10 @@ app.get("/EnterCheck/:userId", (req: Request, res: Response, next: NextFunction)
     enteredUsers--;
     waitingUsers.splice(waitingUsers.indexOf(userIdN), 1);
     enter = true;
-    // console.log("entercount", count);
+    console.log("entercount", count);
   }
 
-  // console.log("enteredUsers", enteredUsers, "enter", enter);
+  console.log("enteredUsers", enteredUsers, "enter", enter);
 
   return res.status(200).json({ enter });
 });
@@ -89,20 +89,18 @@ app.get("/connect", (req: Request, res: Response, next: NextFunction) => {
   todayCounter(year + "" + month + "" + day);
 
   const userId: number = ++num;
-
+  const totalUser = waitingUsers.length;
   if (count <= maxUsers - 1 && waitingUsers.length == 0) {
     count++;
     const enter = true;
-
-    return res.status(200).json({ enter });
+    return res.status(200).json({ userId, enter, totalUser });
   }
 
   if (count >= maxUsers || waitingUsers.length > 0) {
     // waitingUsers.push(userId);
     waitingUsers.push(userId);
-    // console.log(waitingUsers);
+    console.log(waitingUsers);
     const enter = false;
-    const totalUser = waitingUsers.length;
     return res.status(200).json({ userId, enter, totalUser });
   }
 });
