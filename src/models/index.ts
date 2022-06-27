@@ -1,23 +1,38 @@
-import mysql from "mysql2/promise";
+import { Db, MongoClient } from "mongodb";
 
-export const connection = mysql.createPool({
-  host: "127.0.0.1",
-  user: "root",
-  port: 3306,
-  password: "182436aa",
-  database: "nissanTest",
-  connectionLimit: 5,
-  multipleStatements: true,
-});
+import "dotenv/config";
 
-export const dbConnectionCheck = async (): Promise<void> => {
-  const conn = await connection.getConnection();
+export let db: Db;
 
-  try {
-    console.log("DB connection🦉");
-  } catch (error: any) {
-    throw new Error(error);
-  } finally {
-    conn.release();
-  }
-};
+MongoClient.connect(
+  process.env.DB_URL as string,
+  (error: Error | undefined, client: MongoClient | undefined) => {
+    if (error) {
+      return console.log(error);
+    }
+
+    db = (client as MongoClient).db("nissanDb");
+    //서버시작
+    console.log("DB Connect Success");
+  },
+);
+
+export function Counter(module: string) {
+  db.collection("Counter").updateOne({ name: module }, { $inc: { totalCount: 1 } }, () => {});
+}
+export function themeCounter(theme: string) {
+  db.collection("Counter").updateOne(
+    { name: "theme", "category.themeName": theme },
+    { $inc: { "category.$.count": 1 } },
+    () => {},
+  );
+}
+
+export function todayCounter(date: string) {
+  db.collection("todayCounter").updateOne(
+    { name: date },
+    { $inc: { totalCount: 1 } },
+    { upsert: true },
+    () => {},
+  );
+}

@@ -2,8 +2,7 @@ import express, { Request, Response, NextFunction } from "express";
 import { nanoid } from "nanoid";
 import "dotenv/config";
 import cors from "cors";
-
-import { dbConnectionCheck } from "./models";
+import { todayCounter } from "./models/index";
 
 const corsOptions = {
   origin: "*",
@@ -13,58 +12,19 @@ const app = express();
 app.use(cors(corsOptions));
 app.use(express.json());
 
-dbConnectionCheck();
-
-const maxUsers = 1000;
+const maxUsers = Number(process.env.MAX_USER);
 // const waitingUsers: any[] = [995, 996, 997, 998, 999, 1000, 1001, 1002, 1003, 1004, 1005, 1006];
 // const waitingUsers: Array<string> = [];
 const waitingUsers: Array<number> = [];
 let enteredUsers = 0;
-let count = 1000;
+let count = 0;
 
 app.get("/", (req: Request, res: Response, next: NextFunction) => {
   res.send("hello world");
 });
 
-// app.post('/userCountCheck', (req: Request, res: Response, next: NextFunction) => {
-//   const { userId } = req.body;
-//   const enterCount = maxUsers - count;
-//   // const enterCount = maxUsers - waitingUsers.count();
-//   let enter = false;
-//   const index = waitingUsers.indexOf(userId);
-
-//   console.log(index);
-//   console.log('this2', userId);
-
-//   if (enterCount > 0 && index < enterCount && index !== -1) {
-//     console.log('this', userId);
-//     // waitingUsers.splice(index, 1);
-//     enteredUsers++;
-//     count++;
-//     enter = true;
-//   }
-
-//   console.log(count);
-//   console.log('waitingUsers', waitingUsers);
-//   console.log('enteredUsers', enteredUsers);
-
-//   return res.status(200).json({ userId, enter });
-// });
-
-// app.post('/delete', (req: Request, res: Response, next: NextFunction) => {
-//   for (let i = 0; i < enteredUsers; i++) {
-//     waitingUsers.shift();
-//     enteredUsers--;
-//   }
-//   console.log('enteredUsers', enteredUsers);
-//   console.log('waitingUsers', waitingUsers);
-//   return res.sendStatus(200);
-// });
-
 // waiting disconnect
-
 app.get("/WaitingDisconnect/:userId", (req: Request, res: Response) => {
-  // const userId = req.body.userId;
   const { userId } = req.params;
   const userIdN = Number(userId);
   waitingUsers.splice(waitingUsers.indexOf(userIdN), 1);
@@ -82,10 +42,10 @@ app.post("/disconnect", (req: Request, res: Response) => {
       enteredUsers++;
     }
 
-    console.log("==================");
-    console.log(count);
-    console.log(enteredUsers);
-    console.log("==================");
+    // console.log("==================");
+    // console.log(count);
+    // console.log(enteredUsers);
+    // console.log("==================");
 
     return res.status(200).json({ enteredUsers });
   }
@@ -108,7 +68,7 @@ app.get("/EnterCheck/:userId", (req: Request, res: Response, next: NextFunction)
     enteredUsers--;
     waitingUsers.splice(waitingUsers.indexOf(userIdN), 1);
     enter = true;
-    console.log("entercount", count);
+    // console.log("entercount", count);
   }
 
   // console.log("enteredUsers", enteredUsers, "enter", enter);
@@ -121,6 +81,13 @@ let num = 0;
 app.get("/connect", (req: Request, res: Response, next: NextFunction) => {
   // const { userId } = req.body;
   // const userId: string = nanoid(20);
+
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  todayCounter(year + "" + month + "" + day);
+
   const userId: number = ++num;
 
   if (count <= maxUsers - 1 && waitingUsers.length == 0) {
@@ -133,11 +100,10 @@ app.get("/connect", (req: Request, res: Response, next: NextFunction) => {
   if (count >= maxUsers || waitingUsers.length > 0) {
     // waitingUsers.push(userId);
     waitingUsers.push(userId);
-    console.log(waitingUsers);
+    // console.log(waitingUsers);
     const enter = false;
-    const totalUser = count + waitingUsers.length;
-    console.log(totalUser);
-    return res.status(200).json({ userId });
+    const totalUser = waitingUsers.length;
+    return res.status(200).json({ userId, enter, totalUser });
   }
 });
 
