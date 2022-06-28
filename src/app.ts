@@ -2,7 +2,11 @@ import express, { Request, Response, NextFunction } from "express";
 import { nanoid } from "nanoid";
 import "dotenv/config";
 import cors from "cors";
-import { todayCounter } from "./models/index";
+// import { todayCounter, findLists } from "./models/index";
+import { run } from "./models/connect";
+run();
+
+import TodayCounter, { ItodayCounter } from "./models/count";
 
 const corsOptions = {
   origin: "*",
@@ -12,6 +16,9 @@ const app = express();
 app.use(cors(corsOptions));
 app.use(express.json());
 
+app.set("views", __dirname + "/views");
+app.set("view engine", "ejs");
+
 const maxUsers = Number(process.env.MAX_USER);
 // const waitingUsers: any[] = [995, 996, 997, 998, 999, 1000, 1001, 1002, 1003, 1004, 1005, 1006];
 // const waitingUsers: Array<string> = [];
@@ -19,8 +26,15 @@ const waitingUsers: Array<number> = [];
 let enteredUsers = 0;
 let count = 1000;
 
-app.get("/", (req: Request, res: Response, next: NextFunction) => {
-  res.send("hello world");
+app.get("/", async (req: Request, res: Response, next: NextFunction) => {
+  const result = await TodayCounter.find({});
+  const length = result.length;
+  res.render("index", { result, length });
+});
+
+app.get("/api/lists", async (req: Request, res: Response, next: NextFunction) => {
+  const result = await TodayCounter.find({});
+  res.status(200).json({ result });
 });
 
 // waiting disconnect
@@ -36,6 +50,7 @@ app.get("/WaitingDisconnect/:userId", (req: Request, res: Response) => {
 app.post("/disconnect", (req: Request, res: Response) => {
   if (count !== 0) {
     count--;
+    console.log(count);
 
     // 들어갈 수 있는 사용자수가 Max를 넘지 않도록
     if (enteredUsers < maxUsers) {
@@ -73,12 +88,12 @@ app.get("/EnterCheck/:userId", (req: Request, res: Response, next: NextFunction)
 
   console.log("enteredUsers", enteredUsers, "enter", enter);
 
-  return res.status(200).json({ enter });
+  return res.status(200).json({ enter, index });
 });
 
 let num = 0;
 // First Connect
-app.get("/connect", (req: Request, res: Response, next: NextFunction) => {
+app.get("/connect", async (req: Request, res: Response, next: NextFunction) => {
   // const { userId } = req.body;
   // const userId: string = nanoid(20);
 
@@ -86,8 +101,12 @@ app.get("/connect", (req: Request, res: Response, next: NextFunction) => {
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
   const day = date.getDate();
-  todayCounter(year + "" + month + "" + day);
 
+  await TodayCounter.updateOne(
+    { name: year + "" + month + "" + day },
+    { $inc: { totalCount: 1 } },
+    { upsert: true },
+  );
   const userId: number = ++num;
   const totalUser = waitingUsers.length;
   if (count <= maxUsers - 1 && waitingUsers.length == 0) {
