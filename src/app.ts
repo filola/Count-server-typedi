@@ -32,8 +32,8 @@ let count = 1000;
 
 app.get("/api", async (req: Request, res: Response, next: NextFunction) => {
   const result = await TodayCounter.find({});
-  const length = result.length;
-  res.render("index", { result, length });
+  const length = waitingUsers.length;
+  res.render("index", { result, length, count });
 });
 
 app.get("/api/data/:date", async (req: Request, res: Response, next: NextFunction) => {

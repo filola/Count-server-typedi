@@ -32,10 +32,12 @@
           success: function (response) {
             let name = response["result"].name;
             let totalCount = response["result"].totalCount;
-            let temp_html = `<tr>
+            let temp_html = `<tbody>
+                                <tr>
                                 <th scope="row">${name}</th>
                                 <td>${totalCount}</td>
-                              </tr>`;
+                              </tr>
+                            </tdoby>`;
             $("#tablee").replaceWith(temp_html);
           },
         });
@@ -49,18 +51,35 @@
       <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
         날짜 목록
       </button>
+      
+      
       <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
         <% for(let i = 0; i<result.length; i++){ %>
         <li><a class="dropdown-item" href="#" onclick="getData(this.text)"><%= result[i].name %></a></li>
         <% } %>
       </ul>
+      
     </div>
 
     <table class="table" >
       <thead >
+        <tbody>
+          <tr>
+            <th scope="col">현재 이용자수</th>
+            <th scope="col">대기자수</th>
+          </tr>
+          <tr>
+            <th scope="row"><%= count %></th>
+            <td><%= length %></td>
+          </tr>
+          <tr>
+            <th></th>
+            <th></th>         
+          </tr>
+        </tbody>         
         <tr>
           <th scope="col">Date</th>
-          <th scope="col">Count</th>
+          <th scope="col">Count</th>          
         </tr>
       </thead>
       
