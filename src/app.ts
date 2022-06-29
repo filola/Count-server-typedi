@@ -26,10 +26,20 @@ const waitingUsers: Array<number> = [];
 let enteredUsers = 0;
 let count = 1000;
 
-app.get("/", async (req: Request, res: Response, next: NextFunction) => {
+app.get("/api", async (req: Request, res: Response, next: NextFunction) => {
   const result = await TodayCounter.find({});
   const length = result.length;
   res.render("index", { result, length });
+});
+
+app.get("/api/data/:date", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { date } = req.params;
+    const result = await TodayCounter.findOne({ name: date });
+    res.status(200).json({ result });
+  } catch (error) {
+    next(error);
+  }
 });
 
 app.get("/api/lists", async (req: Request, res: Response, next: NextFunction) => {

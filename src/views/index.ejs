@@ -22,21 +22,49 @@
     <title>nissanViews</title>
 
     <script>
-     
+     function getData(date) {
+      
+        // 주소에 저장해둔 postId값 가져와라
+        $.ajax({
+          type: "GET",
+          url: `/api/data/${date}`,
+          data: {},
+          success: function (response) {
+            let name = response["result"].name;
+            let totalCount = response["result"].totalCount;
+            let temp_html = `<tr>
+                                <th scope="row">${name}</th>
+                                <td>${totalCount}</td>
+                              </tr>`;
+            $("#tablee").replaceWith(temp_html);
+          },
+        });
+      }
       
     </script>
   </head>
   <body>
     <h1>Nissan data</h1>
+    <div class="dropdown">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+        날짜 목록
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+        <% for(let i = 0; i<result.length; i++){ %>
+        <li><a class="dropdown-item" href="#" onclick="getData(this.text)"><%= result[i].name %></a></li>
+        <% } %>
+      </ul>
+    </div>
 
-    <table class="table">
-      <thead>
+    <table class="table" >
+      <thead >
         <tr>
           <th scope="col">Date</th>
           <th scope="col">Count</th>
         </tr>
       </thead>
-      <tbody>
+      
+      <tbody id="tablee">
         <% for(let i = 0; i<result.length; i++){ %>
         <tr>
           <th scope="row"><%= result[i].name %></th>
