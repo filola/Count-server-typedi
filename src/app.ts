@@ -9,7 +9,11 @@ run();
 import TodayCounter, { ItodayCounter } from "./models/count";
 
 const corsOptions = {
-  origin: "*",
+  origin: [
+    "nissan-electrified-lab.com",
+    "https://main.d5zhst9hkrw6n.amplifyapp.com",
+    "https://dev.d5zhst9hkrw6n.amplifyapp.com",
+  ],
 };
 
 const app = express();
