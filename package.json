@@ -20,6 +20,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
+    "helmet": "^5.1.0",
     "mongodb": "^4.7.0",
     "mongoose": "^6.4.0",
     "mysql2": "^2.3.3",

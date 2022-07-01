@@ -4,6 +4,7 @@ import "dotenv/config";
 import cors from "cors";
 // import { todayCounter, findLists } from "./models/index";
 import { run } from "./models/connect";
+import helmet from "helmet";
 run();
 
 import TodayCounter, { ItodayCounter } from "./models/count";
@@ -17,6 +18,8 @@ const corsOptions = {
 };
 
 const app = express();
+
+app.use(helmet());
 app.use(cors(corsOptions));
 app.use(express.json());
 
@@ -113,8 +116,8 @@ app.get("/connect", async (req: Request, res: Response, next: NextFunction) => {
 
   const date = new Date();
   const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
+  const month = ("0" + (date.getMonth() + 1)).slice(-2);
+  const day = ("0" + date.getDate()).slice(-2);
 
   await TodayCounter.updateOne(
     { name: year + "" + month + "" + day },
