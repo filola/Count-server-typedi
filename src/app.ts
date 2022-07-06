@@ -8,6 +8,7 @@ import helmet from "helmet";
 run();
 
 import TodayCounter, { ItodayCounter } from "./models/count";
+import CommingCounter from "./models/commingCount";
 
 const corsOptions = {
   origin: [
@@ -31,7 +32,7 @@ const maxUsers = Number(process.env.MAX_USER);
 // const waitingUsers: Array<string> = [];
 const waitingUsers: Array<number> = [];
 let enteredUsers = 0;
-let count = 1000;
+let count = 0;
 
 app.get("/api", async (req: Request, res: Response, next: NextFunction) => {
   const result = await TodayCounter.find({});
@@ -133,7 +134,6 @@ app.get("/connect", async (req: Request, res: Response, next: NextFunction) => {
   }
 
   if (count >= maxUsers || waitingUsers.length > 0) {
-    // waitingUsers.push(userId);
     waitingUsers.push(userId);
     console.log(waitingUsers);
     const enter = false;
@@ -145,4 +145,18 @@ const port = Number(process.env.PORT);
 
 app.listen(port, () => {
   console.log(`server listening on port ${port} `);
+});
+
+app.post("/commingSoon", async () => {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = ("0" + (date.getMonth() + 1)).slice(-2);
+  const day = ("0" + date.getDate()).slice(-2);
+  const hours = date.getHours();
+
+  await CommingCounter.updateOne(
+    { name: year + "-" + month + "-" + day + ":" + hours },
+    { $inc: { timeCount: 1 } },
+    { upsert: true },
+  );
 });
