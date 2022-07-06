@@ -40,6 +40,11 @@ app.get("/api", async (req: Request, res: Response, next: NextFunction) => {
   res.render("index", { result, length, count });
 });
 
+app.get("/api/soon", async (req: Request, res: Response, next: NextFunction) => {
+  const soon = await CommingCounter.find({});
+  res.render("soon", { soon });
+});
+
 app.get("/api/data/:date", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { date } = req.params;
@@ -147,7 +152,7 @@ app.listen(port, () => {
   console.log(`server listening on port ${port} `);
 });
 
-app.post("/commingSoon", async () => {
+app.post("/commingSoon", async (req: Request, res: Response, next: NextFunction) => {
   const date = new Date();
   const year = date.getFullYear();
   const month = ("0" + (date.getMonth() + 1)).slice(-2);
@@ -159,4 +164,5 @@ app.post("/commingSoon", async () => {
     { $inc: { timeCount: 1 } },
     { upsert: true },
   );
+  res.sendStatus(200);
 });
