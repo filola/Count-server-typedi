@@ -9,20 +9,22 @@ run();
 
 import TodayCounter, { ItodayCounter } from "./models/count";
 import CommingCounter from "./models/commingCount";
+import counterRouter from "./router/counter.router";
+import waitingRoomRouter from "./router/waitingRoom.router";
 
-const corsOptions = {
-  origin: [
-    "https://*.nissan-electrified-lab.com",
-    "https://main.d5zhst9hkrw6n.amplifyapp.com",
-    "https://dev.d5zhst9hkrw6n.amplifyapp.com",
-  ],
-};
+// const corsOptions = {
+//   origin: [process.env.ADDRESS],
+// };
 
 const app = express();
 
 app.use(helmet());
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
+
+app.use("/", waitingRoomRouter);
+app.use("/api", counterRouter);
 
 app.set("views", __dirname + "/views");
 app.set("view engine", "ejs");
@@ -34,31 +36,31 @@ const waitingUsers: Array<number> = [];
 let enteredUsers = 0;
 let count = 0;
 
-app.get("/api", async (req: Request, res: Response, next: NextFunction) => {
-  const result = await TodayCounter.find({});
-  const length = waitingUsers.length;
-  res.render("index", { result, length, count });
-});
+// app.get("/api", async (req: Request, res: Response, next: NextFunction) => {
+//   const result = await TodayCounter.find({});
+//   const length = waitingUsers.length;
+//   res.render("index", { result, length, count });
+// });
 
-app.get("/api/soon", async (req: Request, res: Response, next: NextFunction) => {
-  const soon = await CommingCounter.find({});
-  res.render("soon", { soon });
-});
+// app.get("/api/soon", async (req: Request, res: Response, next: NextFunction) => {
+//   const soon = await CommingCounter.find({});
+//   res.render("soon", { soon });
+// });
 
-app.get("/api/data/:date", async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { date } = req.params;
-    const result = await TodayCounter.findOne({ name: date });
-    res.status(200).json({ result });
-  } catch (error) {
-    next(error);
-  }
-});
+// app.get("/api/data/:date", async (req: Request, res: Response, next: NextFunction) => {
+//   try {
+//     const { date } = req.params;
+//     const result = await TodayCounter.findOne({ name: date });
+//     res.status(200).json({ result });
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 
-app.get("/api/lists", async (req: Request, res: Response, next: NextFunction) => {
-  const result = await TodayCounter.find({});
-  res.status(200).json({ result });
-});
+// app.get("/api/lists", async (req: Request, res: Response, next: NextFunction) => {
+//   const result = await TodayCounter.find({});
+//   res.status(200).json({ result });
+// });
 
 // waiting disconnect
 app.get("/WaitingDisconnect/:userId", (req: Request, res: Response) => {
@@ -150,19 +152,4 @@ const port = Number(process.env.PORT);
 
 app.listen(port, () => {
   console.log(`server listening on port ${port} `);
-});
-
-app.post("/commingSoon", async (req: Request, res: Response, next: NextFunction) => {
-  const date = new Date();
-  const year = date.getFullYear();
-  const month = ("0" + (date.getMonth() + 1)).slice(-2);
-  const day = ("0" + date.getDate()).slice(-2);
-  const hours = date.getHours();
-
-  await CommingCounter.updateOne(
-    { name: year + "-" + month + "-" + day + ":" + hours },
-    { $inc: { timeCount: 1 } },
-    { upsert: true },
-  );
-  res.sendStatus(200);
 });
