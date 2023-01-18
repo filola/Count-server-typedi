@@ -26,7 +26,7 @@
     "mysql2": "^2.3.3",
     "nanoid": "^3.3.4",
     "reflect-metadata": "^0.1.13",
-    "typedi": "^0.10.0"
+    "typedi": "^0.8.0"
   },
   "scripts": {
     "start": "node dist/app.js",

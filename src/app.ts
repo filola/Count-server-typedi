@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import express, { Request, Response, NextFunction } from "express";
 import { nanoid } from "nanoid";
 import "dotenv/config";
@@ -11,7 +12,6 @@ import TodayCounter, { ItodayCounter } from "./models/count";
 import CommingCounter from "./models/commingCount";
 import counterRouter from "./router/counter.router";
 import waitingRoomRouter from "./router/waitingRoom.router";
-
 // const corsOptions = {
 //   origin: [process.env.ADDRESS],
 // };
@@ -23,11 +23,11 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
-app.use("/", waitingRoomRouter);
-app.use("/api", counterRouter);
-
 app.set("views", __dirname + "/views");
 app.set("view engine", "ejs");
+
+app.use("/", waitingRoomRouter);
+app.use("/api", counterRouter);
 
 const maxUsers = Number(process.env.MAX_USER);
 // const waitingUsers: any[] = [995, 996, 997, 998, 999, 1000, 1001, 1002, 1003, 1004, 1005, 1006];

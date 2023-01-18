@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { Service } from "typedi";
 import { CounterService } from "../service/counter.service";
 
+@Service()
 export class CounterController {
   constructor(private _counterService: CounterService) {}
 

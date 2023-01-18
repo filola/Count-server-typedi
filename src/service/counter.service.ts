@@ -1,6 +1,9 @@
+import { ParamsDictionary } from "express-serve-static-core";
+import { Service } from "typedi";
 import { dateDto } from "../interface/date.interface";
 import { CounterRepository } from "../repository/counter.repository";
 
+@Service()
 export class CounterService {
   constructor(private _counterRepository: CounterRepository) {}
 
